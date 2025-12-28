@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -25,10 +26,23 @@ class ProductController extends Controller
        $request->validate([
         'name' => 'required|string|max:255',
         'price' => 'required|numeric',
-        'description' => 'nullable|string'
+        'description' => 'nullable|string',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
        ]);
 
-       Product::create($request->all());
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = Str::uuid() . '.' . $file->extension();
+            $validated['image'] = $file->storeAs('products', $filename, 'public');
+        }
+
+        $validated['name'] = $request->input('name');
+        $validated['price'] = $request->input('price');
+        $validated['description'] = $request->input('description');
+
+        Product::create($validated);
+    
+
        return redirect()->route('products.index')->with('message', 'Product created successfully');
 
     }
@@ -41,13 +55,21 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = Str::uuid() . '.' . $file->extension();
+            $validated['image'] = $file->storeAs('products', $filename, 'public');
+        }
+        
         $product->update([
-            'name' => $request->input('name'),
+            'name' =>  $request->input('name'),
             'price' => $request->input('price'),
             'description' => $request->input('description'),
+            'image' => $request->hasFile('image') ?  $validated['image'] : $product->image,
         ]);
 
         return redirect()->route('products.index')->with('message', 'Product updated successfully');

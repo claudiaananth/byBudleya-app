@@ -7,6 +7,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { CircleAlert } from 'lucide-react';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -15,19 +16,21 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+
 export default function Index() {
 
     const {data, setData, post, processing, errors } = useForm({
         name: '',
         price: '',
-        description: ''
+        description: '',
+        image: null as File | null
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         post('/products');
     }
-
+    
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -61,6 +64,18 @@ export default function Index() {
                     <div className='gap-1.5'>
                         <Label htmlFor="product description">Description</Label>
                         <Textarea placeholder="Description" value={data.description}  onChange={(e) => setData('description', e.target.value)}/>
+                    </div>
+                    <div className='gap-1.5'>
+                        <Label htmlFor="product description">Upload Picture</Label>
+                        <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                                if (e.target.files && e.target.files.length > 0) {
+                                    setData('image', e.target.files[0]);
+                                }
+                            }}
+                        />
                     </div>
                     <Button disabled={processing} type="submit">Add Product</Button>
                 </form>
