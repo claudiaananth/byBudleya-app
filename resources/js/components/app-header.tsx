@@ -41,11 +41,6 @@ const mainNavItems: NavItem[] = [
         title: 'Menu',
         href: '/menu',
         icon: LayoutGrid,
-    },
-    {
-        title: 'Products',
-        href: '/products',
-        icon: LayoutGrid,
     }
 ];
 
@@ -73,6 +68,20 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const page = usePage<SharedData>();
     const { auth } = page.props;
     const getInitials = useInitials();
+    if(auth.user.role !== 'admin'){
+        mainNavItems.push({
+            title: 'My Orders',
+            href: '/orders',
+            icon: LayoutGrid,
+        
+        });
+    }else{
+        mainNavItems.push({
+            title: 'Products',
+            href: '/products',
+            icon: LayoutGrid,
+        });
+    };
     return (
         <>
             <div className="border-b border-sidebar-border/80">
