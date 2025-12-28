@@ -44,7 +44,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Products',
-        href: '/products/create',
+        href: '/products',
         icon: LayoutGrid,
     }
 ];

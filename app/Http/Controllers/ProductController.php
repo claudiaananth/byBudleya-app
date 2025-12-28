@@ -13,6 +13,11 @@ class ProductController extends Controller
         return Inertia::render('Menu/Index', compact('products'));
     }
 
+    public function indexAdmin(){
+        $products = Product::all();
+        return Inertia::render('Products/Index', compact('products'));
+    }
+
     public function create(){
         return Inertia::render('Products/Create');
     }

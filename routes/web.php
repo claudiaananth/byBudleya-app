@@ -16,6 +16,7 @@ Route::get('/menu',[ProductController::class, 'index'])->name('menu.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     
+    Route::get('/products',[ProductController::class, 'indexAdmin'])->name('products.index');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::put('/products/{product}', [ProductController::class, "update"])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, "destroy"])->name('products.destroy');
